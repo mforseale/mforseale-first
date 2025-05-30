@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seele - Site for Cinema Lovers</title>
+    <link rel="stylesheet" href ="{% static 'css/style.css' %}"/>
+</head>
+<body class="home-page">
+    <!-- Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container container">
+      <a href="{% url 'home' %}" class="logo">Seele</a>
+      <ul class="nav-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'movies' %}">Movies</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+
+    <!-- Main content wrapper -->
+  <div class="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        {% if user.is_authenticated %}
+        <h1 class="hero-title">Welcome back to Seele, {{ user.username }}!</h1>
+        <p class="hero-subtitle">Aesthetic Cinema Experience</p>
+        {% else %}
+        <p>Вы не вошли на сайт</p>
+        <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+      </div>
+    </section>
+
+    <!-- Features Section with background -->
+    <section class="features-section">
+      <div class="container">
+        <div class="features">
+         <div class="feature-card">
+            <img src="{% static 'img/j4.jpg' %}" alt="Write Your Reviews" class="feature-img">
+            <h3>Write Your Reviews</h3>
+            <p>Share your impressions about movies and series, tell what you liked.</p>
+        </div>
+        <div class="feature-card">
+            <img src="{% static 'img/j1.png' %}" alt="Rate a Movie" class="feature-img">
+            <h3>Rate a Movie</h3>
+            <p>Express your opinion through ratings, help other users find something interesting.</p>
+        </div>
+        <div class="feature-card">
+            <img src="{% static 'img/j3.jpg' %}" alt="Share Your List" class="feature-img">
+            <h3>Create and Share Your List</h3>
+            <p>Collect your favorite movies into lists and share them with friends or other users.</p>
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+<!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Seele Site. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+<script src ="{% static 'js/script.js' %}"></script>
+</html>

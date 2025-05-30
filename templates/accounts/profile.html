@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="profile-page">
+<nav class="navbar">
+    <div class="navbar-container container">
+      <a href="{% url 'home' %}" class="logo">Seele</a>
+      <ul class="nav-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'movies' %}">Movies</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+    <div class="profile-card">
+        <h1>Привет, {{ user.username }}!</h1>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Имя:</strong> {{ user.first_name }}</p>
+        <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+        <a class="logout-button" href="{% url 'logout' %}">Выйти</a>
+
+    </div>
+
+    <div class="reviews-section">
+      <h2>Мои рецензии</h2>
+      {% if reviews %}
+        <ul class="review-list">
+          {% for review in reviews %}
+            <li>
+              <strong>{{ review.movie.title }}</strong> —
+              <em>{{ review.created_at|date:"d.m.Y" }}</em><br>
+              <span class="review-snippet">
+                ★ {{ review.rating }} — {{ review.text|truncatechars:100 }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>У вас пока нет рецензий.</p>
+      {% endif %}
+    </div>
+
+</body>
+</html>

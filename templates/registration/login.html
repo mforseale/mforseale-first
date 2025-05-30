@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<!-- templates/registration/login.html -->
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label for="{{ form.username.id_for_label }}">Имя:</label>
+        {{ form.username }}
+        <label for="{{ form.password.id_for_label }}">Пароль:</label>
+        {{ form.password }}
+        <button type="submit">Войти</button>
+    </form>
+</body>
+</html>

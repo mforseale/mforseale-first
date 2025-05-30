@@ -1,0 +1,662 @@
+/* style.css */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+
+  flex: 1 0 auto;
+  padding-bottom: 6rem; /
+
+}
+/* === Navbar === */
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.navbar {
+  background-color: #000000;
+  border-bottom: 1px solid #e0e7ef;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #ffffff;
+  padding-bottom: 4px;
+  transition: color 0.3s, border-bottom 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-links li a:hover,
+.nav-links li a:focus {
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.hero {
+  text-align: center;
+  padding: 1rem 0 3rem;
+  background-color:  transparent;
+  color: #ffffff;
+}
+
+.hero h1 {
+  font-size: 7rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 3rem 0;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card h3 {
+  color: #0a0a0a;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.footer {
+  background-color: #000000;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 1px solid #e3e9f0;
+
+
+}
+.feature-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.feature-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+/* === Features Section Background и Row === */
+
+
+.features {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  /* отключаем перенос, чтобы все три карты были в одном ряду */
+  flex-wrap: nowrap;
+
+}
+
+/* если на очень узких экранах хочется скролл, а не спад карточек: */
+.features-section .container {
+  overflow-x: auto;
+
+}
+
+/* Остальной ваш .feature-card и .feature-img остаются прежними */
+.feature-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0; /* чтобы не сжимались при горизонтальном скролле */
+}
+
+.feature-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+/* Общий фон всей страницы */
+body.home-page{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('../img/j6.jpg');
+  background-repeat: repeat;
+  background-position: top left;
+  background-size: auto;
+  background-blend-mode: multiply;
+  padding-top: 0;
+}
+
+
+/* Перекрытие фона на блоке с карточками */
+.features-section {
+  background: none; /* Убираем затемнение и фон */
+  padding: 0rem 0;
+}
+
+
+
+body.movies-page {
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #111;
+  color: #fff;
+  margin: 0;
+  padding-top: 0;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 2rem;
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.search-form input {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #fff;
+  background: transparent;
+  color: #fff;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.search-form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #fff;
+  background-color: #fff;
+  color: #000;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-form button:hover {
+  background-color: #444;
+  color: #fff;
+  border-color: #fff;
+}
+
+.movies-table {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.movies-table th,
+.movies-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #444;
+  text-align: left;
+}
+
+.movies-table th {
+  background-color: #000;
+  font-weight: bold;
+}
+
+.movies-table tr:hover {
+  background-color: #333;
+}
+
+.movies-table a {
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px dashed #fff;
+}
+
+.movies-table a:hover {
+  color: #aaa;
+  border-bottom: 1px solid #aaa;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1.5rem;
+  color: #aaa;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+body.profile-page {
+  background-color: #111;
+  color: #fff;
+  font-family: 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding-top: 0;
+}
+
+.profile-card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.profile-card h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.profile-card p {
+  margin: 0.5rem 0;
+}
+
+.logout-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  color: #000;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+.reviews-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.reviews-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+}
+
+.review-list {
+  list-style: none;
+  padding: 0;
+}
+
+.review-list li {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #1f1f1f;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.review-list a {
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px dashed #888;
+}
+
+.review-list a:hover {
+  color: #aaa;
+  border-bottom: 1px solid #aaa;
+}
+
+.review-snippet {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-top: 0.5rem;
+}
+
+body.movie-detail {
+  background-color: #000; /* Чёрный фон */
+  color: #fff;            /* Белый текст */
+  font-family: Arial, sans-serif;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+body.movie-detail a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+body.movie-detail a:hover {
+  color: #ccc;
+}
+
+body.movie-detail h1,
+body.movie-detail h2,
+body.movie-detail h3 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+body.movie-detail p {
+  color: #ddd;
+}
+
+body.movie-detail table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  background-color: #111;
+}
+
+body.movie-detail th,
+body.movie-detail td {
+  border: 1px solid #444;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  color: #eee;
+}
+
+body.movie-detail th {
+  background-color: #222;
+}
+
+body.movie-detail tr:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+body.movie-detail a[href] {
+  display: inline-block;
+  margin-top: 2rem;
+}
+
+
+
+
+
+
+body.movie-detail {
+  background-color: #000;
+  color: #fff;
+  font-family: 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.movie-container {
+  display: flex;
+  padding: 40px;
+  gap: 40px;
+}
+
+.movie-poster {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.movie-poster-img {
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.movie-score {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.score-value {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+.score-label {
+  font-size: 0.9em;
+  color: #ccc;
+}
+
+.movie-info {
+  flex-grow: 1;
+}
+
+.title {
+  font-size: 2.4em;
+  margin-bottom: 0.2em;
+}
+
+.year {
+  font-weight: normal;
+  color: #aaa;
+}
+
+.subline {
+  color: #ccc;
+  margin: 5px 0;
+}
+
+.section-heading {
+  font-size: 1.6em;
+  margin-top: 30px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
+
+.description {
+  line-height: 1.6;
+}
+
+.btn-small {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 8px 16px;
+  border: 1px solid #fff;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.btn-small:hover {
+  background: #fff;
+  color: #000;
+}
+
+.btn-back {
+  margin-left: 10px;
+}
+
+.reviews-section {
+  padding: 40px;
+  border-top: 1px solid #333;
+  background: #111;
+}
+
+.hidden {
+  display: none;
+}
+
+.review-item {
+  border-bottom: 1px solid #333;
+  padding: 20px 0;
+}
+
+.review-item .header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.review-item .author {
+  font-weight: bold;
+}
+
+.review-item .rating {
+  color: #ffd700;
+}
+
+.review-item .text {
+  line-height: 1.4;
+}
+
+.no-reviews {
+  color: #999;
+}
+
+
+
+/* Скрывает элемент */
+.hidden {
+  display: none !important;
+}
+.modal {
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #111;
+  padding: 30px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  color: white;
+  position: relative;
+  box-shadow: 0 0 10px #000;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.modal-content textarea,
+.modal-content input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  border: none;
+  background: #222;
+  color: white;
+  font-size: 1em;
+}
+
+.submit-btn {
+  width: 100%;
+  background: #fff;
+  color: #000;
+  border: none;
+}

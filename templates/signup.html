@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+</head>
+<body>
+    <h2>Регистрация нового пользователя</h2>
+    <form method="post">
+    {% csrf_token %}
+    <label for="{{ form.username.id_for_label }}">Имя:</label>
+    {{ form.username }}
+    <label for="{{ form.password1.id_for_label }}">Пароль:</label>
+    {{ form.password1 }}
+    <label for="{{ form.password2.id_for_label }}">Подтвердите
+    пароль:</label>
+    {{ form.password2 }}
+    <button type="submit">Зарегистрировать</button>
+    </form>
+</body>
+</html

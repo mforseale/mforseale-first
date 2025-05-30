@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Reviews</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f4f4f8;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        li {
+            background-color: #ffffff;
+            border-left: 5px solid #3498db;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        li:hover {
+            transform: translateY(-3px);
+        }
+
+        strong {
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        .rating {
+            color: #e67e22;
+            font-weight: bold;
+        }
+
+        .user {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .text {
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎬 Movie Reviews</h1>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <strong>{{ review.movie.title }}</strong>
+                — <span class="rating">{{ review.rating }}/10</span>
+                <br> <span class="user">By {{ review.user.username }}</span>
+                <p class="text">“{{ review.text }}”</p>
+            </li>
+        {% empty %}
+            <li>No reviews yet 😢</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

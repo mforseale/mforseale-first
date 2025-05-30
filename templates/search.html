@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты поиска фильмов</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+    <h1>Результаты поиска по запросу:</h1>
+    <h2>"{{ request.GET.q }}"</h2>
+
+    <table>
+        <tr>
+            <th>Название</th>
+            <th>Год выпуска</th>
+            <th>Режиссёр</th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+            <td>
+                <a href="{% url 'movie_detail' movie.pk %}">
+                    {{ movie.title }}
+                </a>
+            </td>
+            <td>{{ movie.release_year }}</td>
+            <td>{{ movie.director }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">Фильмы не найдены 😢</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

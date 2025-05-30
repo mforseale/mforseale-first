@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Lists</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body>
+    <h1>User Movie Lists:</h1>
+    <ul>
+        {% for list in list %}
+            <li>{{ list.name }} - Created by {{ list.owner.username }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

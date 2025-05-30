@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Фильмы</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+<body class="movies-page">
+<nav class="navbar">
+    <div class="navbar-container container">
+      <a href="{% url 'home' %}" class="logo">Seele</a>
+      <ul class="nav-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'movies' %}">Movies</a></li>
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+      </ul>
+    </div>
+  </nav>
+<form action="{% url 'search' %}" method="GET" class="search-form">
+    <input name="q" type="text" placeholder="Введите название фильма..." value="{{ request.GET.q }}">
+    <button type="submit">Поиск</button>
+</form>
+
+<h1>Список всех фильмов:</h1>
+
+{% if movies %}
+    <table class="movies-table">
+        <tr>
+            <th>Название</th>
+            <th>Год выпуска</th>
+            <th>Режиссёр</th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+            <td><a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a></td>
+            <td>{{ movie.release_year }}</td>
+            <td>{{ movie.director }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <div class="no-results">
+        <h1>Фильмы не найдены 😢</h1>
+    </div>
+{% endif %}
+
+</body>
+</html>

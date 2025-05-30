@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ movie.title }} ({{ movie.release_year }})</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="movie-detail">
+
+  <div class="movie-container">
+
+    <!-- Левая колонка: постер и основные метки -->
+    <aside class="movie-poster">
+      <img src="{{ movie.poster_url }}" alt="Постер фильма" class="movie-poster-img">
+      <div class="movie-score">
+        <span class="score-value">{{ movie.rating|default:"–" }}</span>
+        <span class="score-label">Оценка</span>
+      </div>
+    </aside>
+
+    <!-- Правая колонка: информация о фильме -->
+    <section class="movie-info">
+      <h1 class="title">{{ movie.title }} <span class="year">({{ movie.release_year }})</span></h1>
+      <p class="subline">Режиссёр: <a href="#">{{ movie.director }}</a></p>
+      <p class="subline">Жанр: {{ movie.genre_list }}</p>
+      <p class="subline">Время: {{ movie.duration }} мин</p>
+      <p class="subline">Просмотров: {{ movie.view_count }}</p>
+
+      <h2 class="section-heading">Описание</h2>
+      <p class="description">{{ movie.description }}</p>
+
+      <button id="toggle-reviews" class="btn-small">Отзывы ({{ movie.reviews.count }})</button>
+      <a href="{% url 'movies' %}" class="btn-small btn-back">← К списку</a>
+    </section>
+
+  </div>
+
+  <button id="open-review-form" class="btn-small">✍️ Написать отзыв</button>
+    <!-- Модальное окно -->
+    <div id="review-modal" class="modal hidden">
+      <div class="modal-content">
+        <span id="close-modal" class="close-button">&times;</span>
+        <h2>Оставить отзыв</h2>
+        <form method="POST" action="{% url 'add_review' movie.pk %}">
+          {% csrf_token %}
+          <label for="text">Отзыв:</label>
+          <textarea name="text" id="text" rows="5" required></textarea>
+
+          <label for="rating">Рейтинг (1–10):</label>
+          <input type="number" name="rating" id="rating" min="1" max="10" required>
+
+          <button type="submit" class="btn-small submit-btn">Отправить</button>
+        </form>
+      </div>
+    </div>
+
+  <!-- Скрываемая секция отзывов -->
+  <div id="reviews-section" class="reviews-section hidden">
+    <h2 class="section-heading">Отзывы</h2>
+    {% for review in movie.reviews.all %}
+      <div class="review-item">
+        <div class="header">
+          <span class="author">{{ review.user.username }}</span>
+          <span class="date">{{ review.created_at|date:"d.m.Y" }}</span>
+          <span class="rating">★ {{ review.rating }}</span>
+        </div>
+        <p class="text">{{ review.text }}</p>
+      </div>
+    {% empty %}
+      <p class="no-reviews">Пока нет отзывов.</p>
+    {% endfor %}
+  </div>
+  <script>
+      const openBtn = document.getElementById('open-review-form');
+      const modal = document.getElementById('review-modal');
+      const closeBtn = document.getElementById('close-modal');
+      openBtn.onclick = () => modal.classList.remove('hidden');
+      closeBtn.onclick = () => modal.classList.add('hidden');
+      window.onclick = (e) => {
+        if (e.target == modal) modal.classList.add('hidden');
+      };
+
+</script>
+
+  <!-- Скрипт для открытия/закрытия отзывов -->
+  <script>
+    document.getElementById('toggle-reviews').onclick = function() {
+      const sec = document.getElementById('reviews-section');
+      sec.classList.toggle('hidden');
+      this.textContent = sec.classList.contains('hidden')
+        ? `Отзывы (${ {{ movie.reviews.count }} })`
+        : 'Скрыть отзывы';
+    };
+  </script>
+
+</body>
+</html>

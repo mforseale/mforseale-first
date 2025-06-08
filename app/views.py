@@ -32,10 +32,6 @@ class MovieListView(ListView):
     model = Movie
     context_object_name = "movies"
 
-from django.views.generic.detail import DetailView
-from django.shortcuts import redirect
-from .models import Movie, Review
-from .forms import ReviewForm
 
 class MovieDetailView(DetailView):
     model = Movie
@@ -122,4 +118,51 @@ def profile_view(request):
     return render(request, 'profile.html', {'reviews': reviews})
 
 
+from django.shortcuts import render
+from .models import Movie
+from django.db.models import Q
 
+class SearchView(ListView):
+    model = Movie
+    template_name = "search_results.html"
+    context_object_name = "movies"
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+        return Movie.objects.filter(title__icontains=query) | Movie.objects.filter(director__icontains=query)
+from django.http import JsonResponse
+from django.views import View
+from app.models import Movie  # или где у тебя модель
+
+from django.http import JsonResponse
+from app.models import Movie
+
+from django.http import JsonResponse
+from django.views import View
+from .models import Movie
+
+class AjaxSearchView(View):
+    def get(self, request):
+        query = request.GET.get("q", "")
+        movies = Movie.objects.filter(title__icontains=query) | Movie.objects.filter(director__icontains=query)
+        data = [
+            {
+                "movie_id": movie.movie_id,
+                "title": movie.title,
+                "poster_url": movie.poster_url,
+                "director": movie.director,
+                "genre": movie.genre,
+                "rating": movie.rating,
+                "popularity": movie.popularity,
+                "release_year": movie.release_year,
+            }
+            for movie in movies
+        ]
+        return JsonResponse(data, safe=False)
+
+
+def live_search(request):
+    q = request.GET.get("q", "")
+    results = Movie.objects.filter(title__icontains=q)[:10]
+    data = {"results": [{"id": movie.id, "title": movie.title, "release_year": movie.release_year} for movie in results]}
+    return JsonResponse(data)

@@ -1,33 +1,96 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Фильмы</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <style>
+        /* Стили остаются такими же, как в предыдущем варианте */
+        .rating-widget {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .rating-star {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .rating-star:hover,
+        .rating-star.active {
+            color: #f39c12;
+        }
+
+        .current-rating {
+            margin-left: 10px;
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .movie-poster {
+            width: 60px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* Остальные стили... */
+    </style>
 </head>
 <body class="movies-page">
 {% include "partials/navbar.html" %}
 <div id="suggestions" class="suggestions-box"></div>
-<form action="{% url 'search' %}" method="GET" class="search-form">
-    <input name="q" type="text" placeholder="Введите название фильма..." value="{{ request.GET.q }}">
-    <button type="submit">Поиск</button>
-</form>
 
 <h1>Список всех фильмов:</h1>
 
 {% if movies %}
     <table class="movies-table">
         <tr>
+            <th>Постер</th>
             <th>Название</th>
             <th>Год выпуска</th>
             <th>Режиссёр</th>
+            <th>Действия</th>
         </tr>
         {% for movie in movies %}
         <tr>
+            <td>
+                {% if movie.poster_url %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="movie-poster" onerror="this.src='{% static 'images/default_poster.jpg' %}'">
+                {% else %}
+                    <img src="{% static 'images/default_poster.jpg' %}" alt="{{ movie.title }}" class="movie-poster">
+                {% endif %}
+            </td>
             <td><a href="{% url 'movie_detail' movie.pk %}">{{ movie.title }}</a></td>
             <td>{{ movie.release_year }}</td>
             <td>{{ movie.director }}</td>
+            <td class="movie-actions">
+                <div class="rating-widget" data-movie-id="{{ movie.pk }}">
+                    {% for i in "12345"|make_list %}
+                        <span class="rating-star" data-value="{{ i }}">★</span>
+                    {% endfor %}
+                    <span class="current-rating">
+                        {% for rating in movie.user_ratings.all %}
+                            {% if rating.user == request.user %}
+                                Ваша оценка: {{ rating.score }}/10
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+
+                <button class="action-btn favorite-btn
+                    {% if request.user in movie.favorites.all %}added{% endif %}"
+                    data-movie-id="{{ movie.pk }}">
+                    {% if request.user in movie.favorites.all %}★ В избранном{% else %}Добавить в избранное{% endif %}
+                </button>
+            </td>
         </tr>
         {% endfor %}
     </table>
@@ -36,6 +99,89 @@
         <h1>Фильмы не найдены 😢</h1>
     </div>
 {% endif %}
+
 <script src="{% static 'js/script.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация звёзд рейтинга
+    document.querySelectorAll('.rating-widget').forEach(widget => {
+        const ratingText = widget.querySelector('.current-rating').textContent.trim();
+        if (ratingText.includes('Ваша оценка:')) {
+            const userRating = parseInt(ratingText.split(':')[1].split('/')[0]);
+            const stars = widget.querySelectorAll('.rating-star');
+
+            // Подсвечиваем звёзды в соответствии с оценкой (делим на 2, так как 2-10)
+            const starsToHighlight = Math.round(userRating / 2);
+            stars.forEach((star, index) => {
+                if (index < starsToHighlight) {
+                    star.classList.add('active');
+                }
+            });
+        }
+    });
+
+    // Обработка оценки фильма
+    document.querySelectorAll('.rating-star').forEach(star => {
+        star.addEventListener('click', function() {
+            const movieId = this.closest('.rating-widget').dataset.movieId;
+            const ratingValue = this.dataset.value * 2; // Преобразуем 1-5 в 2-10
+
+            fetch(`/rate-movie/${movieId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    score: ratingValue
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Обновляем отображение рейтинга
+                    const ratingWidget = this.closest('.rating-widget');
+                    ratingWidget.querySelector('.current-rating').textContent = `Ваша оценка: ${ratingValue}/10`;
+
+                    // Подсвечиваем звёзды
+                    ratingWidget.querySelectorAll('.rating-star').forEach((s, index) => {
+                        if (index < this.dataset.value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                }
+            });
+        });
+    });
+
+    // Обработка добавления в избранное (остаётся без изменений)
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const movieId = this.dataset.movieId;
+
+            fetch(`/toggle-favorite/${movieId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.action === 'added') {
+                        this.classList.add('added');
+                        this.textContent = '★ В избранном';
+                    } else {
+                        this.classList.remove('added');
+                        this.textContent = 'Добавить в избранное';
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Оценка {{ movie.title }}{% endblock %}
+
+{% block content %}
+<h1>Оценить "{{ movie.title }}"</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить оценку</button>
+</form>
+{% if user_rating %}
+<p>Ваша текущая оценка: {{ user_rating.score }}/10</p>
+{% endif %}
+{% endblock %}

@@ -2,27 +2,160 @@
 {% load static %}
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Профиль</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="UTF-8">
+  <title>Профиль</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% include "partials/navbar.html" %}
 </head>
-
 <body class="profile-page">
-{% include "partials/navbar.html" %}
-<div id="suggestions" class="suggestions-box"></div>
-    <div class="profile-card">
-        <h1>Привет, {{ user.username }}!</h1>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Имя:</strong> {{ user.first_name }}</p>
-        <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+
+  <div class="profile-container">
+    <div class="profile-section">
+      <div class="profile-card">
+        <div class="profile-info">
+          <img src="{% static 'img/j1.png' %}" alt="Аватар" class="avatar-img">
+          <div class="profile-text">
+            <h1>{{ user.username }}</h1>
+            <p>Добро пожаловать в ваш профиль</p>
+          </div>
+        </div>
+
+         <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-title">Любимая цитата:</span>
+            <div class="favorite-quote">"Cinema is a mirror by which we often see ourselves." – Alejandro G. Iñárritu</div>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-title">Достижения:</span>
+            <div class="achievements-grid">
+              <div class="achievement">
+                <img src="{% static 'img/m1.jpg' %}" alt="Новичок" class="achievement-icon">
+                <span class="achievement-title">Новичок</span>
+              </div>
+              <div class="achievement">
+                <img src="{% static 'img/m3.jpg' %}" alt="Критик" class="achievement-icon">
+                <span class="achievement-title">Критик</span>
+              </div>
+              <div class="achievement locked">
+                <img src="{% static 'img/x2.jpg' %}" alt="Заблокировано" class="achievement-icon">
+                <span class="achievement-title">Киноман</span>
+              </div>
+              <div class="achievement locked">
+                <img src="{% static 'img/x3.jpg' %}" alt="Заблокировано" class="achievement-icon">
+                <span class="achievement-title">Эксперт</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="logout-button">Выйти</button>
+          {% csrf_token %}
+          <button type="submit" class="logout-button">Выйти</button>
         </form>
+      </div>
+
+      <div class="favorites-card">
+        <h2 class="favorites-title"><i class="fas fa-heart"></i> Избранные фильмы</h2>
+        <div class="favorites-grid">
+            <div class="favorite-movie">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_.jpg" alt="The Shawshank Redemption" class="favorite-poster">
+                <div class="favorite-overlay">
+                    <p class="favorite-title">The Shawshank Redemption</p>
+                </div>
+            </div>
+            <div class="favorite-movie">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjlkNTE5ZTUtNGEwNy00MGVhLThmZjMtZjU1NDE5Zjk1NDZkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="The Godfather" class="favorite-poster">
+                <div class="favorite-overlay">
+                    <p class="favorite-title">Social Network</p>
+                </div>
+            </div>
+            <div class="favorite-movie">
+                <img src="https://m.media-amazon.com/images/M/MV5BOGU0YzFmZDYtODgxMC00NmQ0LTg0MjQtZDJlNzcwZDU5ZjFkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Interstellar" class="favorite-poster">
+                <div class="favorite-overlay">
+                    <p class="favorite-title">Burning</p>
+                </div>
+            </div>
+            <div class="favorite-movie">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_FMjpg_UX1000_.jpg" alt="Inception" class="favorite-poster">
+                <div class="favorite-overlay">
+                    <p class="favorite-title">Inception</p>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Lists Section -->
+    <div class="lists-section">
+      <h2 class="section-title"><i class="fas fa-list"></i> Мои списки</h2>
+
+      <!-- List Creation Form -->
+      <div class="list-creation">
+        <form method="post" action="{% url 'create_list' %}" class="list-form">
+          {% csrf_token %}
+          <input type="text" name="name" placeholder="Название списка" required class="list-input">
+          <button type="submit" class="create-list-btn">Создать список</button>
+        </form>
+      </div>
+
+      <!-- User's Lists Display -->
+      <div class="user-lists">
+        {% if user.lists.all %}
+          <div class="lists-grid">
+            {% for list in user.lists.all %}
+              <div class="list-card">
+                <div class="list-header">
+                  <h3>{{ list.name }}</h3>
+                  <span class="list-movie-count">{{ list.movies.count }} фильмов</span>
+                </div>
+
+                <div class="list-movies-preview">
+                  {% for movie in list.movies.all|slice:":4" %}
+                    <img src="{{ movie.poster_url }}" alt="{{ movie.title }}" class="list-movie-poster">
+                  {% endfor %}
+                  {% if list.movies.count > 4 %}
+                    <div class="list-movie-more">+{{ list.movies.count|add:"-4" }}</div>
+                  {% endif %}
+                </div>
+
+                <div class="list-actions">
+                  <a href="{% url 'list_detail' list.list_id %}" class="list-view-btn">Просмотреть</a>
+                  <form method="post" action="{% url 'delete_list' list.list_id %}" class="list-delete-form">
+                    {% csrf_token %}
+                    <button type="submit" class="list-delete-btn">Удалить</button>
+                  </form>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="no-content">У вас пока нет списков. Создайте свой первый список!</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Ratings and Reviews Section at the bottom -->
+  <div class="bottom-section">
+    <div class="ratings-section">
+      <h2 class="section-title"><i class="fas fa-star"></i> Мои оценки</h2>
+      {% if ratings %}
+        <ul class="ratings-list">
+          {% for rating in ratings %}
+            <li>
+              <span class="movie-title">{{ rating.movie.title }}</span>
+              <span class="rating-score">{{ rating.score }}/10</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="no-content">Вы ещё не оценили ни одного фильма</p>
+      {% endif %}
     </div>
 
     <div class="reviews-section">
-      <h2>Мои рецензии</h2>
+      <h2 class="section-title"><i class="fas fa-pen"></i> Мои рецензии</h2>
       {% if reviews %}
         <ul class="review-list">
           {% for review in reviews %}
@@ -30,15 +163,15 @@
               <strong>{{ review.movie.title }}</strong> —
               <em>{{ review.created_at|date:"d.m.Y" }}</em><br>
               <span class="review-snippet">
-                ★ {{ review.rating }} — {{ review.text|truncatechars:100 }}
+                {{ review.rating }} — {{ review.text|truncatechars:100 }}
               </span>
             </li>
           {% endfor %}
         </ul>
       {% else %}
-        <p>У вас пока нет рецензий.</p>
+        <p class="no-content">У вас пока нет рецензий.</p>
       {% endif %}
     </div>
-<script src="{% static 'js/script.js' %}"></script>
+  </div>
 </body>
 </html>

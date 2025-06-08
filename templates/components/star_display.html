@@ -1,0 +1,5 @@
+{# templates/components/star_display.html #}
+<span class="stars">
+    {% for i in "1234567890"|slice:":score"|make_list %}★{% endfor %}
+    {% for i in "1234567890"|slice:"score:"|make_list %}☆{% endfor %}
+</span> ({{ score }}/10)

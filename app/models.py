@@ -43,3 +43,47 @@ class List(models.Model):
 
     def __str__(self):
         return f"{self.name} by {self.user.username}"
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    favorite_movies = models.ManyToManyField(Movie, blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Rating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_ratings')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='user_ratings')
+    score = models.IntegerField(choices=[(i, i) for i in range(1, 11)])  # Оценка от 1 до 10
+
+    class Meta:
+        unique_together = ('user', 'movie')  # Один пользователь - одна оценка на фильм
+        verbose_name = 'Rating'
+        verbose_name_plural = 'Ratings'
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.movie.title} as {self.score}"
+
+    def save(self, *args, **kwargs):
+        # Проверяем, что оценка в допустимом диапазоне
+        if not 1 <= self.score <= 10:
+            raise ValueError("Score must be between 1 and 10")
+        super().save(*args, **kwargs)
+
+        # Обновляем средний рейтинг фильма
+        self.update_movie_rating()
+
+    def update_movie_rating(self):
+        ratings = Rating.objects.filter(movie=self.movie)
+        count = ratings.count()
+        total = sum(r.score for r in ratings)
+        self.movie.rating = total / count if count > 0 else 0
+        self.movie.save()
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_favorites')
+    movie = models.ForeignKey('Movie', on_delete=models.CASCADE, related_name='favorites')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'movie')

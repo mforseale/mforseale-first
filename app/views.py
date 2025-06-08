@@ -118,6 +118,7 @@ def profile_view(request):
     return render(request, 'profile.html', {'reviews': reviews})
 
 
+
 from django.shortcuts import render
 from .models import Movie
 from django.db.models import Q
@@ -166,3 +167,96 @@ def live_search(request):
     results = Movie.objects.filter(title__icontains=q)[:10]
     data = {"results": [{"id": movie.id, "title": movie.title, "release_year": movie.release_year} for movie in results]}
     return JsonResponse(data)
+# views.py
+from django.shortcuts import render, redirect
+from .forms import UserProfileForm
+from .models import UserProfile, Movie
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import UserProfile, Review
+
+@login_required
+def profile_view(request):
+    profile = UserProfile.objects.get(user=request.user)
+    reviews = profile.user.review_set.all()  # если модель Review с ForeignKey на user
+    rated_movies = profile.favorite_movies.all()  # или по-другому, если ты хранишь оценки отдельно
+
+    return render(request, 'profile.html', {
+        'profile': profile,
+        'reviews': reviews,
+        'rated_movies': rated_movies
+    })
+    user = request.user
+    rated_movies = Rating.objects.filter(user=user).count()
+    ratings = Rating.objects.filter(user=user).values_list('score', flat=True)
+
+    distribution = {}
+    for i in range(1, 11):
+        distribution[i] = ratings.filter(score=i).count()
+
+    context = {
+        'user_stats': {
+            'rated_movies': rated_movies,
+            'rating_distribution': distribution,
+        }
+    }
+    return render(request, 'profile.html', context)
+
+
+from django.shortcuts import get_object_or_404, redirect, render  # Добавлен render
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Rating, Movie
+from .forms import RatingForm
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def rate_movie(request, movie_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Требуется авторизация'})
+
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+        score = int(request.POST.get('score'))
+
+        if not (2 <= score <= 10):
+            return JsonResponse({'success': False, 'error': 'Некорректная оценка'})
+
+        rating, created = Rating.objects.update_or_create(
+            user=request.user,
+            movie=movie,
+            defaults={'score': score}
+        )
+
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+@require_POST
+def toggle_favorite(request, movie_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Требуется авторизация'})
+
+    try:
+        movie = Movie.objects.get(pk=movie_id)
+        favorite, created = Favorite.objects.get_or_create(
+            user=request.user,
+            movie=movie
+        )
+
+        if not created:
+            favorite.delete()
+            return JsonResponse({'success': True, 'action': 'removed'})
+
+        return JsonResponse({'success': True, 'action': 'added'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+def movie_list(request):
+    movies = Movie.objects.all().prefetch_related('user_ratings', 'favorites')
+    return render(request, 'movies.html', {'movies': movies})

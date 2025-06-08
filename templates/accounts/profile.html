@@ -6,24 +6,19 @@
     <title>Профиль</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body class="profile-page">
-<nav class="navbar">
-    <div class="navbar-container container">
-      <a href="{% url 'home' %}" class="logo">Seele</a>
-      <ul class="nav-links">
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'movies' %}">Movies</a></li>
-        <li><a href="{% url 'profile' %}">Profile</a></li>
-      </ul>
-    </div>
-  </nav>
+{% include "partials/navbar.html" %}
+<div id="suggestions" class="suggestions-box"></div>
     <div class="profile-card">
         <h1>Привет, {{ user.username }}!</h1>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Имя:</strong> {{ user.first_name }}</p>
         <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
-        <a class="logout-button" href="{% url 'logout' %}">Выйти</a>
-
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Выйти</button>
+        </form>
     </div>
 
     <div class="reviews-section">
@@ -44,6 +39,6 @@
         <p>У вас пока нет рецензий.</p>
       {% endif %}
     </div>
-
+<script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

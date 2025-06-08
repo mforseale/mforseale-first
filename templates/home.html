@@ -9,16 +9,8 @@
 </head>
 <body class="home-page">
     <!-- Navigation -->
-  <nav class="navbar">
-    <div class="navbar-container container">
-      <a href="{% url 'home' %}" class="logo">Seele</a>
-      <ul class="nav-links">
-        <li><a href="{% url 'home' %}">Home</a></li>
-        <li><a href="{% url 'movies' %}">Movies</a></li>
-        <li><a href="{% url 'profile' %}">Profile</a></li>
-      </ul>
-    </div>
-  </nav>
+{% include "partials/navbar.html" %}
+    <div id="suggestions" class="suggestions-box"></div>
 
     <!-- Main content wrapper -->
   <div class="main-content">

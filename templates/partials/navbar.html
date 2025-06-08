@@ -1,0 +1,24 @@
+<!-- templates/partials/navbar.html -->
+{% load static %}
+<script src="{% static 'js/script.js' %}"></script>
+<nav class="navbar">
+  <div class="navbar-container container">
+    <a href="{% url 'home' %}" class="logo">Seele</a>
+
+     <!-- Внутри nav оставить только форму -->
+    <form id="live-search-form" autocomplete="off" class="search-form">
+      <input type="text" id="search-input" name="q" placeholder="Поиск фильмов..." class="search-input" />
+    </form>
+
+
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}">Home</a></li>
+      <li><a href="{% url 'movies' %}">Movies</a></li>
+      {% if request.user.is_authenticated %}
+        <li><a href="{% url 'profile' %}">Profile</a></li>
+      {% else %}
+        <li><a href="{% url 'login' %}">Login</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'accounts',
+    'social_django',
+    'cinemaapp',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +137,6 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_USE_TLS = True
+
+LOGIN_REDIRECT_URL = '/accounts/profile/'  # или другой путь, например, "/"
+LOGOUT_REDIRECT_URL = '/accounts/login/'   # если используешь LogoutView
